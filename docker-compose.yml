@@ -12,6 +12,7 @@ services:
         environment:
             SERVICE_NAME: app
             SERVICE_TAGS: dev
+            PHP_OPCACHE_VALIDATE_TIMESTAMPS: ${PHP_OPCACHE_VALIDATE_TIMESTAMPS}
         depends_on:
             - db
         working_dir: /var/www

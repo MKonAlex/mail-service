@@ -12,7 +12,8 @@ RUN apt-get update \
     && docker-php-ext-install pgsql \
     && docker-php-ext-install zip \
     && docker-php-ext-install gd \
-    && docker-php-ext-enable pgsql
+    && docker-php-ext-enable pgsql \
+    && docker-php-ext-install opcache
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -20,6 +21,14 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # xdebug
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 ENV PHP_IDE_CONFIG 'serverName=local'
+
+# opcache
+ENV PHP_OPCACHE_VALIDATE_TIMESTAMPS="1" \
+    PHP_OPCACHE_MAX_ACCELERATED_FILES="10000" \
+    PHP_OPCACHE_MEMORY_CONSUMPTION="192" \
+    PHP_OPCACHE_MAX_WASTED_PERCENTAGE="10"
+
+COPY .docker/.config/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 # Set working directory
 WORKDIR /var/www
